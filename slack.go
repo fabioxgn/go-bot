@@ -23,7 +23,6 @@ func (c slackConnection) GetUser(userId string) *User {
 		log.Print("Unable to get user info ", err)
 		return &User{Nick: userId}
 	}
-	log.Print(user)
 	return &User{Nick: userId, RealName: user.RealName}
 }
 
