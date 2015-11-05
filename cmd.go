@@ -10,7 +10,7 @@ import (
 type Cmd struct {
 	Raw     string   // Raw is full string passed to the command
 	Channel string   // Channel where the command was called
-	Nick    string   // User who sent the message
+	User	*User    // User who sent the message
 	Message string   // Full string without the prefix
 	Command string   // Command is the first argument passed to the bot
 	FullArg string   // Full argument as a single string
@@ -21,7 +21,7 @@ type Cmd struct {
 type PassiveCmd struct {
 	Raw     string // Raw message sent to the channel
 	Channel string // Channel which the message was sent to
-	Nick    string // Nick of the user which sent the message
+	User    *User // Nick of the user which sent the message
 }
 
 type customCommand struct {
@@ -38,6 +38,11 @@ type incomingMessage struct {
 	Text           string
 	SenderNick     string
 	BotCurrentNick string
+}
+
+type User struct {
+	Nick string
+	RealName string
 }
 
 // CmdResult is the result message of V2 commands
@@ -107,28 +112,28 @@ func isPrivateMsg(channel, currentNick string) bool {
 	return channel == currentNick
 }
 
-func messageReceived(channel, text, senderNick string, conn connection) {
+func messageReceived(channel string, text string, user *User, conn connection) {
 	if isPrivateMsg(channel, conn.GetNick()) {
-		channel = senderNick // should reply in private
+		channel = user.Nick // should reply in private
 	}
 
-	command := parse(text, channel, senderNick)
+	command := parse(text, channel, user)
 	if command == nil {
 		executePassiveCommands(&PassiveCmd{
 			Raw:     text,
 			Channel: channel,
-			Nick:    senderNick,
+			User:    user,
 		}, conn)
 		return
 	}
 
 	switch command.Command {
 	case helpCommand:
-		help(command, channel, senderNick, conn)
+		help(command, channel, user, conn)
 	case joinCommand:
-		join(command, channel, senderNick, conn)
+		join(command, channel, user, conn)
 	case partCommand:
-		part(command, channel, senderNick, conn)
+		part(command, channel, user, conn)
 	default:
 		handleCmd(command, conn)
 	}

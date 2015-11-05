@@ -26,7 +26,7 @@ var (
 )
 
 func onPRIVMSG(e *irc.Event) {
-	messageReceived(e.Arguments[0], e.Message(), e.Nick, irccon)
+	messageReceived(e.Arguments[0], e.Message(), &User{Nick: e.Nick}, irccon)
 }
 
 func getServerName() string {

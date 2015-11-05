@@ -11,7 +11,7 @@ const (
 	partNotAllowed = "Nope!"
 )
 
-func part(c *Cmd, channel, senderNick string, conn connection) {
+func part(c *Cmd, channel string, user *User, conn connection) {
 	for _, configChannel := range config.Channels {
 		channelName := strings.Split(configChannel, " ")
 		if strings.EqualFold(channelName[0], channel) {
