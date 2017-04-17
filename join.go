@@ -11,12 +11,12 @@ const (
 	joinMessage = "Hello humans o/ My master %s called me here"
 )
 
-func join(c *Cmd, channel, senderNick string, conn connection) {
+func join(c *Cmd, channel string, user *User, conn connection) {
 	channelToJoin := strings.TrimSpace(c.FullArg)
 	if channelToJoin == "" {
 		conn.Privmsg(channel, joinUsage)
 	} else {
 		conn.Join(channelToJoin)
-		conn.Privmsg(c.Args[0], fmt.Sprintf(joinMessage, senderNick))
+		conn.Privmsg(c.Args[0], fmt.Sprintf(joinMessage, user.Nick))
 	}
 }

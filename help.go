@@ -13,8 +13,8 @@ const (
 	helpCommand       = "help"
 )
 
-func help(c *Cmd, channel, senderNick string, conn connection) {
-	cmd := parse(CmdPrefix+c.FullArg, channel, senderNick)
+func help(c *Cmd, channel string, user *User, conn connection) {
+	cmd := parse(CmdPrefix+c.FullArg, channel, user)
 	if cmd == nil {
 		showAvailabeCommands(channel, conn)
 		return
